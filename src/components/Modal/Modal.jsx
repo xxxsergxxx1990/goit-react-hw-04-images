@@ -4,26 +4,31 @@ import PropTypes from 'prop-types';
 import s from '../Modal/Modal.module.css';
 
 export const Modal = ({ onModalClose, largeImageURL }) => {
-
-
-
   const keyDown = useCallback(
     (e) => {
-      if (e.keyCode === 27 || e.currentTarget === e.target) {
+      if (e.key === 'Escape') {
         onModalClose();
       }
     },
     [onModalClose]
   );
 
+  const handleClick = (e) => {
+    if (e.currentTarget === e.target) {
+      onModalClose();
+    }
+  };
 
   useEffect(() => {
-    window.addEventListener('keydown', keyDown);
-    return window.removeEventListener('keydown', keyDown);
+    const onKeyDown = (e) => keyDown(e);
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
   }, [keyDown]);
 
   return (
-    <div className={s.Overlay} onClick={keyDown}>
+    <div className={s.Overlay} onClick={handleClick}>
       <div className={s.Modal}>
         <img src={largeImageURL} alt="" />
       </div>
@@ -32,6 +37,8 @@ export const Modal = ({ onModalClose, largeImageURL }) => {
 };
 
 Modal.propTypes = {
-  onModalClose: PropTypes.func,
+  onModalClose: PropTypes.func.isRequired,
   largeImageURL: PropTypes.string.isRequired,
 };
+
+

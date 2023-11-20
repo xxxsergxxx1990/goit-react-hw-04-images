@@ -21,30 +21,34 @@ const [largeImageURL,setLargeImageURL] = useState('');
 const [error,setError] = useState(null);
 
 
+
+
 useEffect(() => {
-  
-  if (page !== 1 || query !== '') {
-    fetchGallery(query, page);
-  }
-}, [query, page]);
 
-const fetchGallery = async (query, page) => {
+  const fetchGallery = async (query, page) => {
   try {
-    setIsLoading(true);
-    const { hits, totalHits } = await fetchHitsByQuery(query, page);
-
-    if (hits.length === 0) {
-      Notify.failure('No matches found!');
-    }
-
-    setImages(prevImages => [...prevImages, ...hits]);
-    setShowBtn(page < Math.ceil(totalHits / 12));
-  } catch (error) {
-    setError(error);
-  } finally {
-    setIsLoading(false);
+  setIsLoading(true);
+  const { hits, totalHits } = await fetchHitsByQuery(query, page);
+  
+  if (hits.length === 0) {
+  Notify.failure('No matches found!');
   }
-};
+  
+  setImages(prevImages => [...prevImages, ...hits]);
+  setShowBtn(page < Math.ceil(totalHits / 12));
+  } catch (error) {
+  setError(error);
+  } finally {
+  setIsLoading(false);
+  }
+  };
+  if ( query !== '') {
+  fetchGallery(query, page);
+  }
+
+  }, [query, page]);
+
+
 
 const onSubmit = e => {
   e.preventDefault();
@@ -63,12 +67,16 @@ const onNextPage = () => {
   setPage(prevPage => prevPage + 1);
 };
 
+
+
+
 const onClickImage = url => {
   setShowModal(true);
   setLargeImageURL(url);
 };
 
 const onModalClose = () => {
+  
   setShowModal(false);
   setLargeImageURL('');
 };
