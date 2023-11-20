@@ -22,6 +22,7 @@ const [error,setError] = useState(null);
 
 
 useEffect(() => {
+  
   if (page !== 1 || query !== '') {
     fetchGallery(query, page);
   }
